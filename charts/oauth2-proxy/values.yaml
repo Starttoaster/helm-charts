@@ -1,0 +1,48 @@
+replicaCount: 1
+
+image:
+  repository: quay.io/oauth2-proxy/oauth2-proxy
+  pullPolicy: IfNotPresent
+  tag: ""
+
+# All config fields required
+config:
+  # This URL will come from your identity provider
+  # Corresponds to --oidc-issuer-url flag (ex. https://example.com)
+  issuerURL: ""
+  # This will usually be on an /oauth2/callback path to the domain of this oauth2-proxy deployment
+  # Corresponds to --redirect-url flag (ex. "https://prometheus.example.com/oauth2/callback")
+  redirectURL: ""
+  # Usually a k8s Service address running in the cluster
+  # Corresponds to --upstream flag (ex. "http://prometheus-operated.prometheus.svc.cluster.local:9090")
+  upstream: ""
+
+# All secret fields required
+secret:
+  # See https://oauth2-proxy.github.io/oauth2-proxy/configuration/providers/
+  clientId: ""
+  clientSecret: ""
+  # This helm chart installs oauth2-proxy in cookie storage mode. This mode requires a secret for encrypting the cookie value.
+  # See https://oauth2-proxy.github.io/oauth2-proxy/configuration/session_storage#cookie-storage
+  cookieSecret: ""
+
+gatewayAPI:
+  # This supports the v1 HTTPRoute API schema. It assumes a properly configured GatewayClass and Gateway is already installed and programmed.
+  httpRoute:
+    enabled: false
+    # Defines which Gateways this Route wants to attach to. The Gateway must be configured to accept HTTPRoutes from this namespace.
+    parentRefs:
+      - group: gateway.networking.k8s.io
+        kind: Gateway
+        # Uncomment the following lines and change the values to point to your gateway
+        # name: default
+        # namespace: gateway-system
+
+    # Defines a list of hostnames to use for matching the Host header of requests.
+    hostnames:
+      - chart-example.local
+
+    # Because HTTPRoute rules are so extensible, it is complicated to generate a catch-all set of generic rules.
+    # This chart provides a minimal matcher and backendRef rule by default, but rules can be defined here instead and are provided to the HTTPRoute as-is.
+    # See the HTTPRoute documentation for configuration details: https://gateway-api.sigs.k8s.io/api-types/httproute/
+    # rules: {}

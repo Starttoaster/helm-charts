@@ -1,0 +1,57 @@
+{{- $fullName := include "oauth2-proxy.fullname" . -}}
+{{- $shortName := include "oauth2-proxy.shortname" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "oauth2-proxy.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "oauth2-proxy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "oauth2-proxy.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: oauth2-proxy
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --provider=oidc
+            - --oidc-issuer-url={{ .Values.config.issuerURL }}
+            - --redirect-url={{ .Values.config.redirectURL }}
+            - --exclude-logging-path=/oauth2/callback
+            - --http-address=0.0.0.0:4180
+            - --upstream={{ .Values.config.upstream }}
+            - --email-domain=*
+          env:
+            - name: OAUTH2_PROXY_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullName }}
+                  key: client-id
+            - name: OAUTH2_PROXY_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullName }}
+                  key: client-secret
+            - name: OAUTH2_PROXY_COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullName }}
+                  key: cookie-secret
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: proxy
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: proxy
+          ports:
+            - containerPort: 4180
+              name: proxy

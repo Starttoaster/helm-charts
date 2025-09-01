@@ -1,0 +1,12 @@
+{{- $fullName := include "oauth2-proxy.fullname" . -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $fullName }}
+spec:
+  selector:
+    {{- include "oauth2-proxy.selectorLabels" . | nindent 4 }}
+  ports:
+    - port: 4180
+      targetPort: 4180
+      name: proxy
