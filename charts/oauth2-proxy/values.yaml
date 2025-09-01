@@ -5,17 +5,19 @@ image:
   pullPolicy: IfNotPresent
   tag: ""
 
-# All config fields required
 config:
-  # This URL will come from your identity provider
+  # REQUIRED: This URL will come from your identity provider
   # Corresponds to --oidc-issuer-url flag (ex. https://example.com)
   issuerURL: ""
-  # This will usually be on an /oauth2/callback path to the domain of this oauth2-proxy deployment
+  # REQUIRED: This will usually be on an /oauth2/callback path to the domain of this oauth2-proxy deployment
   # Corresponds to --redirect-url flag (ex. "https://prometheus.example.com/oauth2/callback")
   redirectURL: ""
-  # Usually a k8s Service address running in the cluster
+  # REQUIRED: Usually a k8s Service address running in the cluster
   # Corresponds to --upstream flag (ex. "http://prometheus-operated.prometheus.svc.cluster.local:9090")
   upstream: ""
+  # optional: The duration of time that a cookie will stay valid
+  # Corresponds to the --cookie-expire flag
+  cookieExpire: "8h0s"
 
 # All secret fields required
 secret:
