@@ -3,6 +3,16 @@ entries:
   oauth2-proxy:
   - apiVersion: v2
     appVersion: v7.12.0
+    created: "2025-09-02T00:06:57.833158999Z"
+    description: Simple helm chart that just deploys an oauth2 proxy
+    digest: 2d94ec6a698d610ca225b36ec571614751a27f76f2d99ddb456883ab689bac64
+    name: oauth2-proxy
+    type: application
+    urls:
+    - https://github.com/Starttoaster/helm-charts/releases/download/oauth2-proxy-0.2.0/oauth2-proxy-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
+    appVersion: v7.12.0
     created: "2025-09-01T23:49:26.714196619Z"
     description: Simple helm chart that just deploys an oauth2 proxy
     digest: f639be5c380874914eebdacd099ae749655bda2e5c18c33ada5036220ff6d42b
@@ -21,4 +31,4 @@ entries:
     urls:
     - https://github.com/Starttoaster/helm-charts/releases/download/oauth2-proxy-0.1.0/oauth2-proxy-0.1.0.tgz
     version: 0.1.0
-generated: "2025-09-01T23:49:26.714213741Z"
+generated: "2025-09-02T00:06:57.833172173Z"
